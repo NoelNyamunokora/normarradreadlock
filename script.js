@@ -245,3 +245,34 @@ faqQuestions.forEach(question => {
 });
 
 console.log('Normarra Dreadlocks website loaded successfully!');
+
+// ===== IMAGE LOADING OPTIMIZATION =====
+// Add fade-in effect when images load
+document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        if (img.complete) {
+            img.classList.add('img-loaded');
+        } else {
+            img.addEventListener('load', () => {
+                img.classList.add('img-loaded');
+            });
+        }
+    });
+});
+
+// Lazy load images that are not in viewport
+const lazyImages = document.querySelectorAll('img[data-src]');
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            observer.unobserve(img);
+        }
+    });
+});
+
+lazyImages.forEach(img => imageObserver.observe(img));
